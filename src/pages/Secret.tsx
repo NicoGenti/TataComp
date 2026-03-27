@@ -76,7 +76,7 @@ export default function SecretPage() {
           className="mt-20 text-center p-12 rounded-[3rem] bg-white/5 backdrop-blur-sm border border-white/10"
         >
           <p className="text-xl font-medium italic text-slate-300">
-            "Sei bellissima anche quando fai le facce buffe. Ti amo!"
+            "Ti amo immensamente in qualsiasi momento di questa vita!"
           </p>
         </motion.div>
       </div>
