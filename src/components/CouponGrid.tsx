@@ -79,7 +79,7 @@ export default function CouponGrid() {
               className="w-full h-full relative flex items-center justify-center"
             >
               <img
-                src="/images/iperspazio.jpg"
+                src={`${import.meta.env.BASE_URL}images/iperspazio.jpg`}
                 alt="Hyperspace"
                 className="w-full h-full object-contain"
                 referrerPolicy="no-referrer"
