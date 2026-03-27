@@ -1,37 +1,7 @@
 import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Wand2, Sparkles, Star } from "lucide-react";
-
-const MAGIC_PHOTOS = [
-  { id: 1, url: `${import.meta.env.BASE_URL}images/imgBeauty/20231229_125838000_iOS.jpg`, caption: "Incanto 1 ✨" },
-  { id: 2, url: `${import.meta.env.BASE_URL}images/imgBeauty/20231229_125840000_iOS.jpg`, caption: "Incanto 2 ✨" },
-  { id: 3, url: `${import.meta.env.BASE_URL}images/imgBeauty/20231229_125841000_iOS.jpg`, caption: "Incanto 3 ✨" },
-  { id: 4, url: `${import.meta.env.BASE_URL}images/imgBeauty/20240122_131524076_iOS.jpg`, caption: "Magia pura 🪄" },
-  { id: 5, url: `${import.meta.env.BASE_URL}images/imgBeauty/20240123_150736396_iOS.jpg`, caption: "Lumos! 💡" },
-  { id: 6, url: `${import.meta.env.BASE_URL}images/imgBeauty/20240129_203123417_iOS.jpg`, caption: "Incanto 4 ✨" },
-  { id: 7, url: `${import.meta.env.BASE_URL}images/imgBeauty/20240313_214533348_iOS.jpg`, caption: "Incanto 5 ✨" },
-  { id: 8, url: `${import.meta.env.BASE_URL}images/imgBeauty/20240401_150106952_iOS.jpg`, caption: "Incanto 6 ✨" },
-  { id: 9, url: `${import.meta.env.BASE_URL}images/imgBeauty/20240616_160317012_iOS.jpg`, caption: "Magia pura 🪄" },
-  { id: 10, url: `${import.meta.env.BASE_URL}images/imgBeauty/20240809_122416601_iOS.jpg`, caption: "Incanto 7 ✨" },
-  { id: 11, url: `${import.meta.env.BASE_URL}images/imgBeauty/20240909_120845000_iOS 2.jpg`, caption: "Incanto 8 ✨" },
-  { id: 12, url: `${import.meta.env.BASE_URL}images/imgBeauty/20240921_191617000_iOS.jpg`, caption: "Incanto 9 ✨" },
-  { id: 13, url: `${import.meta.env.BASE_URL}images/imgBeauty/20241005_175139965_iOS.jpg`, caption: "Incanto 10 ✨" },
-  { id: 14, url: `${import.meta.env.BASE_URL}images/imgBeauty/20250401_114542555_iOS.jpg`, caption: "Magia pura 🪄" },
-  { id: 15, url: `${import.meta.env.BASE_URL}images/imgBeauty/20250404_194924983_iOS.jpg`, caption: "Incanto 11 ✨" },
-  { id: 16, url: `${import.meta.env.BASE_URL}images/imgBeauty/20250404_195338249_iOS.jpg`, caption: "Incanto 12 ✨" },
-  { id: 17, url: `${import.meta.env.BASE_URL}images/imgBeauty/20250406_120946977_iOS.jpg`, caption: "Incanto 13 ✨" },
-  { id: 18, url: `${import.meta.env.BASE_URL}images/imgBeauty/20250517_121645396_iOS.jpg`, caption: "Incanto 14 ✨" },
-  { id: 19, url: `${import.meta.env.BASE_URL}images/imgBeauty/20250713_001540000_iOS.jpg`, caption: "Incanto 15 ✨" },
-  { id: 20, url: `${import.meta.env.BASE_URL}images/imgBeauty/20250713_161119389_iOS.jpg`, caption: "Incanto 16 ✨" },
-  { id: 21, url: `${import.meta.env.BASE_URL}images/imgBeauty/20251019_141407522_iOS.jpg`, caption: "Incanto 17 ✨" },
-  { id: 22, url: `${import.meta.env.BASE_URL}images/imgBeauty/20251023_205227581_iOS.jpg`, caption: "Incanto 18 ✨" },
-  { id: 23, url: `${import.meta.env.BASE_URL}images/imgBeauty/20251110_184132509_iOS.jpg`, caption: "Incanto 19 ✨" },
-  { id: 24, url: `${import.meta.env.BASE_URL}images/imgBeauty/20251225_150309880_iOS.jpg`, caption: "Magia del Natale 🎄" },
-  { id: 25, url: `${import.meta.env.BASE_URL}images/imgBeauty/20260118_131944475_iOS.jpg`, caption: "Incanto 20 ✨" },
-  { id: 26, url: `${import.meta.env.BASE_URL}images/imgBeauty/20260205_170437156_iOS.jpg`, caption: "Incanto 21 ✨" },
-  { id: 27, url: `${import.meta.env.BASE_URL}images/imgBeauty/20260307_192939861_iOS.jpg`, caption: "Incanto 22 ✨" },
-  { id: 28, url: `${import.meta.env.BASE_URL}images/imgBeauty/20260315_132540914_iOS.jpg`, caption: "La strega più bella 🧙‍♀️" },
-];
+import { MAGIC_PHOTOS } from "../constants";
 
 export default function MagicPage() {
   const navigate = useNavigate();
@@ -126,6 +96,7 @@ export default function MagicPage() {
               <img
                 src={photo.url}
                 alt={photo.caption}
+                loading="lazy"
                 className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110 sepia-[0.2]"
                 referrerPolicy="no-referrer"
               />

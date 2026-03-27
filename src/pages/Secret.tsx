@@ -1,31 +1,7 @@
 import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Camera } from "lucide-react";
-
-const FUNNY_PHOTOS = [
-  { id: 1, url: `${import.meta.env.BASE_URL}images/imgSecret/1.jpg`, caption: "Dormigliona 1 😪" },
-  { id: 2, url: `${import.meta.env.BASE_URL}images/imgSecret/2.jpg`, caption: "Dormigliona 2 😪" },
-  { id: 3, url: `${import.meta.env.BASE_URL}images/imgSecret/3.jpg`, caption: "Dormigliona 3 😪" },
-  { id: 4, url: `${import.meta.env.BASE_URL}images/imgSecret/4.jpg`, caption: "Tata gamer 🎮" },
-  { id: 5, url: `${import.meta.env.BASE_URL}images/imgSecret/5.jpg`, caption: "Dormigliona 4 😪" },
-  { id: 6, url: `${import.meta.env.BASE_URL}images/imgSecret/6.jpg`, caption: "La bellezza 1 🌟" },
-  { id: 7, url: `${import.meta.env.BASE_URL}images/imgSecret/7.jpg`, caption: "La bellezza 2 🌟" },
-  { id: 8, url: `${import.meta.env.BASE_URL}images/imgSecret/8.jpg`, caption: "Dormigliona 5 😪" },
-  { id: 9, url: `${import.meta.env.BASE_URL}images/imgSecret/9.jpg`, caption: "La bellezza 3 🌟" },
-  { id: 10, url: `${import.meta.env.BASE_URL}images/imgSecret/10.jpg`, caption: "Dormigliona 6 😪" },
-  { id: 11, url: `${import.meta.env.BASE_URL}images/imgSecret/11.jpg`, caption: "Dormigliona 7 😪" },
-  { id: 12, url: `${import.meta.env.BASE_URL}images/imgSecret/12.jpg`, caption: "Dormigliona 8 😪" },
-  { id: 13, url: `${import.meta.env.BASE_URL}images/imgSecret/13.jpg`, caption: "Dormigliona 9 😪" },
-  { id: 14, url: `${import.meta.env.BASE_URL}images/imgSecret/14.jpg`, caption: "La bellezza 4 🌟" },
-  { id: 15, url: `${import.meta.env.BASE_URL}images/imgSecret/15.jpg`, caption: "La bellezza 5 🌟" },
-  { id: 16, url: `${import.meta.env.BASE_URL}images/imgSecret/16.jpg`, caption: "La bellezza 6 🌟" },
-  { id: 17, url: `${import.meta.env.BASE_URL}images/imgSecret/17.jpg`, caption: "Dormigliona 10 😪" },
-  { id: 18, url: `${import.meta.env.BASE_URL}images/imgSecret/18.jpg`, caption: "Va a funghi 🍄‍🟫" },
-  { id: 19, url: `${import.meta.env.BASE_URL}images/imgSecret/19.jpg`, caption: "La bellezza 7 🌟" },
-  { id: 20, url: `${import.meta.env.BASE_URL}images/imgSecret/20.jpg`, caption: "Qui carta canta 💍" },
-  { id: 21, url: `${import.meta.env.BASE_URL}images/imgSecret/21.jpg`, caption: "Tartaruga Ninja 🐢" },
-  { id: 999, url: `${import.meta.env.BASE_URL}images/imgSecret/999.jpg`, caption: "La miglior foto al mondo! 🤪" },
-];
+import { FUNNY_PHOTOS } from "../constants";
 
 export default function SecretPage() {
   const navigate = useNavigate();
@@ -82,6 +58,7 @@ export default function SecretPage() {
               <img
                 src={photo.url}
                 alt={photo.caption}
+                loading="lazy"
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 referrerPolicy="no-referrer"
               />
