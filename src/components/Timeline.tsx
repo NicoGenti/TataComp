@@ -63,6 +63,7 @@ export default function Timeline() {
                   <img
                     src={memory.image}
                     alt={memory.title}
+                    style={memory.image.includes("primo-natale") ? { transform: "rotate(180deg)" } : undefined}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     referrerPolicy="no-referrer"
                   />
