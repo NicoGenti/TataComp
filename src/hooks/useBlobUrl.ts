@@ -10,11 +10,11 @@ import { useState, useEffect } from "react";
  *
  * Returns null while loading, then the blob URL when ready.
  */
-export function useBlobUrl(src: string): string | null {
+export function useBlobUrl(src: string, enabled: boolean = true): string | null {
   const [blobUrl, setBlobUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!src) {
+    if (!src || !enabled) {
       setBlobUrl(null);
       return;
     }
@@ -68,7 +68,7 @@ export function useBlobUrl(src: string): string | null {
         }
       }
     };
-  }, [src]);
+  }, [src, enabled]);
 
   return blobUrl;
 }
