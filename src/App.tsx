@@ -13,7 +13,6 @@ import MagicPage from "./pages/Magic";
 import FlowersPage from "./pages/Flowers";
 import GreetingCard from "./pages/GreetingCard";
 import { Heart, Gift, Mail } from "lucide-react";
-import { DevToolsProvider } from "./context/DevToolsContext";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -183,24 +182,37 @@ function CouponsPage() {
 export default function App() {
   return (
     <HashRouter>
-      <DevToolsProvider>
-        <ScrollToTop />
-        <BlockShortcuts />
-        <div className="min-h-screen bg-pink-50 font-sans selection:bg-rose-200 selection:text-rose-900">
-          <Routes>
-            <Route path="/" element={<GreetingCard />} />
-            <Route path="/journey" element={<HomePage />} />
-            <Route path="/coupons" element={<CouponsPage />} />
-            <Route path="/secret" element={<SecretPage />} />
-            <Route path="/magic" element={<MagicPage />} />
-            <Route path="/flowers" element={<FlowersPage />} />
-          </Routes>
+      <ScrollToTop />
+      <BlockShortcuts />
+      <div className="min-h-screen bg-pink-50 font-sans selection:bg-rose-200 selection:text-rose-900">
+        <Routes>
+          <Route path="/" element={<GreetingCard />} />
+          <Route path="/journey" element={<HomePage />} />
+          <Route path="/coupons" element={<CouponsPage />} />
+          <Route path="/secret" element={<SecretPage />} />
+          <Route path="/magic" element={<MagicPage />} />
+          <Route path="/flowers" element={<FlowersPage />} />
+        </Routes>
 
-          <footer className="py-12 text-center text-slate-400 text-sm border-t border-rose-100">
-            <p>Fatto con ❤️ per il tuo compleanno speciale</p>
-          </footer>
-        </div>
-      </DevToolsProvider>
+        <footer className="py-12 text-center text-slate-400 text-sm border-t border-rose-100 space-y-3">
+          <p>Fatto con ❤️ per il tuo compleanno speciale</p>
+          <p className="text-xs text-slate-300 max-w-xl mx-auto leading-relaxed px-4">
+            Le fotografie presenti in questo sito sono di proprietà privata e protette dalla{" "}
+            <strong>Legge sul Diritto d&apos;Autore (L. 633/1941)</strong> e dal{" "}
+            <strong>GDPR (Reg. UE 2016/679)</strong>. Qualsiasi download, riproduzione o
+            utilizzo non autorizzato costituisce violazione di legge e può comportare
+            sanzioni civili e penali.{" "}
+            <a
+              href="https://www.normattiva.it/uri-res/N2Ls?urn:nir:stato:legge:1941-04-22;633"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline text-slate-400 hover:text-rose-400 transition-colors"
+            >
+              Scopri le conseguenze legali →
+            </a>
+          </p>
+        </footer>
+      </div>
     </HashRouter>
   );
 }
