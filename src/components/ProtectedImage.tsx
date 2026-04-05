@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, ImgHTMLAttributes } from "react";
+import React, { useRef, useEffect, useState, ImgHTMLAttributes } from "react";
 import { useBlobUrl } from "../hooks/useBlobUrl";
 import { useDevToolsContext } from "../context/DevToolsContext";
 
@@ -16,6 +16,8 @@ interface ProtectedImageProps extends Omit<ImgHTMLAttributes<HTMLImageElement>, 
  * 3. Immediately revokes the blob URL after drawing it onto the canvas
  * 4. If DevTools is detected open, the canvas is cleared and replaced with a placeholder
  * 5. Adds an overlay div to prevent right-click context menu and drag
+ * 6. Lazy-loads via IntersectionObserver: the blob fetch only starts when the image
+ *    is within 200px of the viewport, preventing memory exhaustion on long photo grids.
  */
 export function ProtectedImage({
   src,
@@ -25,9 +27,31 @@ export function ProtectedImage({
   style,
   ...rest
 }: ProtectedImageProps) {
-  const blobUrl = useBlobUrl(src);
+  const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [isNearViewport, setIsNearViewport] = useState(false);
   const { isDevToolsOpen } = useDevToolsContext();
+
+  // One-way latch: start fetching only when within 200px of the viewport.
+  // Disconnects immediately after first intersection so isNearViewport never
+  // goes back to false (avoids re-fetching images as the user scrolls).
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsNearViewport(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []); // empty deps — containerRef is stable for the component lifetime
+
+  const blobUrl = useBlobUrl(src, isNearViewport);
 
   // Draw image on canvas when blob URL is ready
   useEffect(() => {
@@ -85,61 +109,64 @@ export function ProtectedImage({
     // (blobUrl may have been revoked; useBlobUrl will re-fetch on next mount cycle)
   }, [isDevToolsOpen]);
 
-  // Show skeleton while loading
-  if (!blobUrl) {
-    return (
-      <div
-        className={`bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 animate-pulse ${className}`}
-        style={{ aspectRatio: "auto", ...style }}
-      />
-    );
-  }
-
   return (
+    // Single persistent container in ALL render states so the IntersectionObserver
+    // ref stays valid through the skeleton → loaded transition.
     <div
+      ref={containerRef}
       className="relative w-full h-full"
-      style={{ position: "relative", userSelect: "none", WebkitUserSelect: "none" }}
+      style={{ position: "relative", userSelect: "none", WebkitUserSelect: "none", ...style }}
+      onContextMenu={(e) => e.preventDefault()}
+      onDragStart={(e) => e.preventDefault()}
     >
-      {/*
-        <canvas> instead of <img>:
-        - No src attribute in the DOM (DevTools Elements tab shows nothing to copy)
-        - Cannot be right-clicked → "Open image in new tab"
-        - Not treated as an <img> resource by the browser's save mechanism
-        - Cleared automatically when DevTools is detected open
-      */}
-      <canvas
-        ref={canvasRef}
-        aria-label={alt}
-        role="img"
-        className={className}
-        style={{
-          display: "block",
-          width: "100%",
-          height: "100%",
-          userSelect: "none",
-          WebkitUserSelect: "none",
-          ...style,
-        }}
-        onContextMenu={(e) => e.preventDefault()}
-        onDragStart={(e) => e.preventDefault()}
-      />
-
-      {/* Transparent overlay to block all pointer interactions */}
-      {showOverlay && (
+      {!blobUrl ? (
+        // Skeleton: absolute inset-0 so it fills the container without causing layout shift
         <div
-          aria-hidden="true"
-          className="absolute inset-0 cursor-default pointer-events-auto select-none"
-          style={{
-            background: "transparent",
-            zIndex: 50,
-            userSelect: "none",
-            WebkitUserSelect: "none",
-          }}
-          onContextMenu={(e) => e.preventDefault()}
-          onDragStart={(e) => e.preventDefault()}
-          onMouseDown={(e) => e.preventDefault()}
-          onPointerDown={(e) => e.preventDefault()}
+          className={`absolute inset-0 bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 animate-pulse ${className ?? ""}`}
         />
+      ) : (
+        <>
+          {/*
+            <canvas> instead of <img>:
+            - No src attribute in the DOM (DevTools Elements tab shows nothing to copy)
+            - Cannot be right-clicked → "Open image in new tab"
+            - Not treated as an <img> resource by the browser's save mechanism
+            - Cleared automatically when DevTools is detected open
+          */}
+          <canvas
+            ref={canvasRef}
+            aria-label={alt}
+            role="img"
+            className={className}
+            style={{
+              display: "block",
+              width: "100%",
+              height: "100%",
+              userSelect: "none",
+              WebkitUserSelect: "none",
+            }}
+            onContextMenu={(e) => e.preventDefault()}
+            onDragStart={(e) => e.preventDefault()}
+          />
+
+          {/* Transparent overlay to block all pointer interactions */}
+          {showOverlay && (
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 cursor-default pointer-events-auto select-none"
+              style={{
+                background: "transparent",
+                zIndex: 50,
+                userSelect: "none",
+                WebkitUserSelect: "none",
+              }}
+              onContextMenu={(e) => e.preventDefault()}
+              onDragStart={(e) => e.preventDefault()}
+              onMouseDown={(e) => e.preventDefault()}
+              onPointerDown={(e) => e.preventDefault()}
+            />
+          )}
+        </>
       )}
     </div>
   );

@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
 import { ArrowLeft, Wand2, Sparkles, Star } from "lucide-react";
@@ -7,6 +8,20 @@ import { ProtectedImage } from "../components/ProtectedImage";
 export default function MagicPage() {
   const navigate = useNavigate();
 
+  // Memoize star data so Math.random() is called only once, not on every re-render.
+  // Re-renders would otherwise generate new random targets and restart all 20 animations
+  // simultaneously, causing a cascade of Motion updates on mobile.
+  const stars = useMemo(() =>
+    Array.from({ length: 12 }, () => ({
+      x: Math.random() * (typeof window !== "undefined" ? window.innerWidth : 800),
+      y: Math.random() * (typeof window !== "undefined" ? window.innerHeight : 600),
+      scale: Math.random() * 0.5 + 0.5,
+      dy: Math.random() * -100 - 50,
+      duration: Math.random() * 5 + 5,
+      delay: Math.random() * 5,
+    }))
+  , []);
+
   return (
     <div className="min-h-screen bg-[#0f172a] text-amber-100 py-20 px-6 relative overflow-hidden font-serif">
       {/* Magical background elements */}
@@ -15,24 +30,24 @@ export default function MagicPage() {
         <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-[100px]" />
 
         {/* Floating stars */}
-        {[...Array(20)].map((_, i) => (
+        {stars.map((star, i) => (
           <motion.div
             key={i}
             className="absolute text-amber-300/30"
             initial={{
-              x: Math.random() * (typeof window !== "undefined" ? window.innerWidth : 800),
-              y: Math.random() * (typeof window !== "undefined" ? window.innerHeight : 600),
-              scale: Math.random() * 0.5 + 0.5,
+              x: star.x,
+              y: star.y,
+              scale: star.scale,
             }}
             animate={{
-              y: [null, Math.random() * -100 - 50],
+              y: [null, star.dy],
               opacity: [0, 1, 0],
             }}
             transition={{
-              duration: Math.random() * 5 + 5,
+              duration: star.duration,
               repeat: Infinity,
               ease: "linear",
-              delay: Math.random() * 5,
+              delay: star.delay,
             }}
           >
             <Star size={10} fill="currentColor" />
@@ -84,8 +99,9 @@ export default function MagicPage() {
             <motion.div
               key={photo.id}
               initial={{ opacity: 0, scale: 0.9, y: 30 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{ delay: 0.1 * (index % 10), duration: 0.5 }}
+              whileInView={{ opacity: 1, scale: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.1 }}
+              transition={{ delay: 0.05 * (index % 6), duration: 0.5 }}
               whileHover={{ scale: 1.03, rotateY: 5, boxShadow: "0 20px 40px -10px rgba(251, 191, 36, 0.2)" }}
               className="group relative aspect-[3/4] rounded-sm overflow-hidden bg-slate-800 border-8 border-slate-900 shadow-2xl"
               style={{ transformPerspective: 1000 }}

@@ -186,7 +186,7 @@ export default function FlowersPage() {
 
       {/* Ambient floating petals background */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {[...Array(12)].map((_, i) => (
+        {[...Array(6)].map((_, i) => (
           <motion.div
             key={i}
             className="absolute w-3 h-4 opacity-20"
